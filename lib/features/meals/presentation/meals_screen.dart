@@ -1,6 +1,11 @@
+import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import '../../../core/widgets/custom_app_bar.dart';
+import '../../meal_detail/data/datasources/meal_detail_remote_datasource.dart';
+import '../../meal_detail/presentation/bloc/meal_detail_bloc.dart';
+import '../../meal_detail/presentation/bloc/meal_detail_event.dart';
+import '../../meal_detail/presentation/meal_detail_screen.dart';
 import 'bloc/meals_bloc.dart';
 import 'bloc/meals_event.dart';
 import 'bloc/meals_state.dart';
@@ -62,10 +67,19 @@ class MealsScreen extends StatelessWidget {
                     meal: meal,
                     onTap: () {
                       // Navigate to meal detail screen
-                      ScaffoldMessenger.of(context).showSnackBar(
-                        SnackBar(
-                          content: Text('Selected: ${meal.strMeal}'),
-                          duration: const Duration(seconds: 1),
+                      Navigator.of(context).push(
+                        MaterialPageRoute(
+                          builder: (context) => BlocProvider(
+                            create: (context) => MealDetailBloc(
+                              remoteDataSource: MealDetailRemoteDataSource(
+                                dio: Dio(),
+                              ),
+                            )..add(LoadMealDetailEvent(meal.idMeal)),
+                            child: MealDetailScreen(
+                              mealId: meal.idMeal,
+                              mealName: meal.strMeal,
+                            ),
+                          ),
                         ),
                       );
                     },
