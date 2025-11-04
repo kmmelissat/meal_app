@@ -1,6 +1,11 @@
+import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import '../../../core/widgets/custom_app_bar.dart';
+import '../../meals/data/datasources/meal_remote_datasource.dart';
+import '../../meals/presentation/bloc/meals_bloc.dart';
+import '../../meals/presentation/bloc/meals_event.dart';
+import '../../meals/presentation/meals_screen.dart';
 import 'bloc/categories_bloc.dart';
 import 'bloc/categories_event.dart';
 import 'bloc/categories_state.dart';
@@ -58,12 +63,23 @@ class CategoriesScreen extends StatelessWidget {
                         category: category,
                         onTap: () {
                           // Navigate to meals screen for this category
-                          ScaffoldMessenger.of(context).showSnackBar(
-                            SnackBar(
-                              content: Text(
-                                'Selected: ${category.strCategory}',
+                          Navigator.of(context).push(
+                            MaterialPageRoute(
+                              builder: (context) => BlocProvider(
+                                create: (context) =>
+                                    MealsBloc(
+                                      remoteDataSource: MealRemoteDataSource(
+                                        dio: Dio(),
+                                      ),
+                                    )..add(
+                                      LoadMealsByCategoryEvent(
+                                        category.strCategory,
+                                      ),
+                                    ),
+                                child: MealsScreen(
+                                  categoryName: category.strCategory,
+                                ),
                               ),
-                              duration: const Duration(seconds: 1),
                             ),
                           );
                         },
