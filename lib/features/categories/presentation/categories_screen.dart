@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import '../../../core/widgets/custom_app_bar.dart';
 import 'bloc/categories_bloc.dart';
 import 'bloc/categories_event.dart';
 import 'bloc/categories_state.dart';
@@ -13,17 +14,8 @@ class CategoriesScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: const Color(0xFFF5F5F5),
-      appBar: AppBar(
-        backgroundColor: Colors.white,
-        elevation: 0,
-        title: const Text(
-          'Meal Finder',
-          style: TextStyle(
-            color: Colors.black87,
-            fontSize: 24,
-            fontWeight: FontWeight.bold,
-          ),
-        ),
+      appBar: CustomAppBar(
+        title: 'Meal Finder',
         actions: [
           IconButton(
             icon: const Icon(Icons.search, color: Colors.black87),
